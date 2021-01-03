@@ -20,6 +20,9 @@ import (
 func pwd() (string, error) {
 
 	dir, err := os.Getwd()
+	if err != nil {
+		panic(err.Error())
+	}
 
 	return dir, err
 }

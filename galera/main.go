@@ -1,4 +1,4 @@
-package galera
+package main
 
 import (
 	"context"

@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
 
+	util "github.com/kimnamkuk/Golang/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	appsv1 "k8s.io/client-go/kubernetes/typed/apps/v1"
@@ -53,6 +55,38 @@ func main() {
 			fmt.Println("Pod's name is", pod.Name)
 
 		}
-
 	}
+
+	path, err := util.pwd()
+}
+
+func init_pod() {
+	// check files (token,SA .etc)
+	if _, err := os.Stat("/var/run/secrets/kubernetes.io/serviceaccount/token"); os.IsNotExist(err) {
+		fmt.Println("No Found /var/run/secrets/kubernetes.io/serviceaccount/token")
+		fmt.Println(err.Error())
+		panic(err.Error())
+	}
+
+	if _, err := os.Stat("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"); os.IsNotExist(err) {
+		fmt.Println("No Found /var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
+		fmt.Println(err.Error())
+		panic(err.Error())
+	}
+
+	if strEnv := os.Getenv("SERVER_ID"); strEnv == "" {
+		fmt.Println("No Set env of server_id")
+		panic(errors.New("No set envirments"))
+	}
+
+	if strEnv := os.Getenv("SSH_PWD"); strEnv == "" {
+		fmt.Println("No Set env of ssh_pwd")
+		panic(errors.New("No set envirments"))
+	}
+
+}
+
+func check_mode() {
+	clientset := util.K8sInCluster()
+
 }

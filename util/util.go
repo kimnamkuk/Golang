@@ -17,7 +17,7 @@ import (
 )
 
 // Get Workdir of current
-func pwd() (string, error) {
+func Getpwd() (string, error) {
 
 	dir, err := os.Getwd()
 

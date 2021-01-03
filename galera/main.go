@@ -57,8 +57,6 @@ func main() {
 		}
 	}
 
-	str, _ := util.pwd()
-	fmt.Println(str)
 }
 
 func init_pod() {
@@ -89,5 +87,4 @@ func init_pod() {
 
 func check_mode() {
 	clientset := util.K8sInCluster()
-
 }

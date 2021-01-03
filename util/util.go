@@ -17,16 +17,16 @@ import (
 )
 
 // Get Workdir of current
-func pwd() (string, error) {
+func pwd() string {
 
 	dir, err := os.Getwd()
 	if err != nil {
 		panic(err.Error())
 	}
 
-	return dir, err
+	return dir
 }
-func cat(strFile string) ([]byte, error) {
+func cat(strFile string) []byte {
 	var output []byte
 	var err error
 	file, err := os.Open(strFile)
@@ -39,10 +39,10 @@ func cat(strFile string) ([]byte, error) {
 	output, err = ioutil.ReadAll(file)
 
 	if err != nil {
-		return nil, err
+		panic(err.Error())
 	}
 
-	return output, nil
+	return output
 }
 
 func K8sInCluster() *k8s.Clientset {

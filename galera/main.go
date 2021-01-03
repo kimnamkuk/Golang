@@ -57,7 +57,8 @@ func main() {
 		}
 	}
 
-	path, err := util.pwd()
+	path, err := util.Getpwd()
+	fmt.Println(path)
 }
 
 func init_pod() {

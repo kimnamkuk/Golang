@@ -17,12 +17,11 @@ import (
 )
 
 // Get Workdir of current
-func Getpwd() (string, error) {
+func pwd() (string, error) {
 
 	dir, err := os.Getwd()
 
 	return dir, err
-
 }
 func cat(strFile string) ([]byte, error) {
 	var output []byte

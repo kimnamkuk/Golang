@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"k8s.io/client-go/kubernetes"
 	k8s "k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
+	appsv1 "k8s.io/client-go/kubernetes/typed/apps/v1"
+	rest "k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 )
@@ -26,7 +26,7 @@ func Pwd() string {
 
 	return dir
 }
-func Cat(strFile string) []byte {
+func Cat(strFile string) string {
 	var output []byte
 	var err error
 	file, err := os.Open(strFile)
@@ -42,43 +42,7 @@ func Cat(strFile string) []byte {
 		panic(err.Error())
 	}
 
-	return output
-}
-
-func K8sInCluster() *k8s.Clientset {
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return clientset
-}
-
-func K8sOutOfCluster() *k8s.Clientset {
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return clientset
+	return string(output)
 }
 
 func Set_chown(strDirpath string, nUid, nGid int) {
@@ -114,4 +78,78 @@ func Set_chown2(strDirpath, strUid, strGid string) {
 	gid, _ := strconv.Atoi(curgroup.Gid)
 
 	Set_chown(strDirpath, uid, gid)
+}
+
+func Get_Appsv1_In_Cluster() *appsv1.AppsV1Client {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	appsv1Client, err := appsv1.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return appsv1Client
+}
+
+func Get_Appsv1_Outof_Cluster() *appsv1.AppsV1Client {
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+	flag.Parse()
+
+	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	appsv1Client, err := appsv1.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return appsv1Client
+}
+
+func Get_Clientset_In_Cluster() *k8s.Clientset {
+
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	clientset, err := k8s.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return clientset
+}
+
+func Get_Clientset_OutOf_Cluster() *k8s.Clientset {
+
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+	flag.Parse()
+
+	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	clientset, err := k8s.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return clientset
 }

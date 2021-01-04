@@ -16,8 +16,8 @@ import (
 )
 
 func main() {
-	strPath := util.pwd()
-	fmt.Println(strPath)
+	strPath := util.Pwd()
+	strNamespace := string(util.Cat(strPath + "\\namespace"))
 
 	os.Setenv("KUBERNETES_MASTER", "172.17.16.160")
 	var kubeconfig *string

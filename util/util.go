@@ -113,5 +113,5 @@ func Set_chown2(strDirpath, strUid, strGid string) {
 	uid, _ := strconv.Atoi(curuser.Uid)
 	gid, _ := strconv.Atoi(curgroup.Gid)
 
-	set_chown(strDirpath, uid, gid)
+	Set_chown(strDirpath, uid, gid)
 }

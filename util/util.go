@@ -97,9 +97,7 @@ func Get_Appsv1_In_Cluster() *appsv1.AppsV1Client {
 //You must set null of parameter, if you want to use
 func Get_Appsv1_Outof_Cluster(strAbspath string, strMasterEnv string) *appsv1.AppsV1Client {
 	var kubeconfig *string
-	if strMasterEnv == "" {
-		os.Setenv("KUBERNETES_MASTER", "")
-	} else {
+	if strMasterEnv != "" {
 		os.Setenv("KUBERNETES_MASTER", strMasterEnv)
 	}
 

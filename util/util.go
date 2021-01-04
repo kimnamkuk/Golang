@@ -111,7 +111,7 @@ func GetConfigInCluster() *rest.Config {
 	return config
 }
 
-func Get_Appsv1_Outof_Cluster(config *rest.Config) *appsv1.AppsV1Client {
+func GetAppsv1(config *rest.Config) *appsv1.AppsV1Client {
 
 	appsv1Client, err := appsv1.NewForConfig(config)
 	if err != nil {
@@ -121,27 +121,7 @@ func Get_Appsv1_Outof_Cluster(config *rest.Config) *appsv1.AppsV1Client {
 	return appsv1Client
 }
 
-func Get_Appsv1_In_Cluster(config *rest.Config) *appsv1.AppsV1Client {
-
-	appsv1Client, err := appsv1.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return appsv1Client
-}
-
-func GetClientsetInCluster(config *rest.Config) *k8s.Clientset {
-
-	clientset, err := k8s.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return clientset
-}
-
-func GetClientsetOutOfCluster(config *rest.Config) *k8s.Clientset {
+func GetClientset(config *rest.Config) *k8s.Clientset {
 
 	clientset, err := k8s.NewForConfig(config)
 	if err != nil {

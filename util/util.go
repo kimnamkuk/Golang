@@ -93,10 +93,17 @@ func Get_Appsv1_In_Cluster() *appsv1.AppsV1Client {
 
 	return appsv1Client
 }
-//You must set null of parameter, if you want to use 
-func Get_Appsv1_Outof_Cluster(strAbspath string) *appsv1.AppsV1Client {
+
+//You must set null of parameter, if you want to use
+func Get_Appsv1_Outof_Cluster(strAbspath string, strMasterEnv string) *appsv1.AppsV1Client {
 	var kubeconfig *string
-	if strAbspath != "" {
+	if strMasterEnv == "" {
+		os.Setenv("KUBERNETES_MASTER", "")
+	} else {
+		os.Setenv("KUBERNETES_MASTER", strMasterEnv)
+	}
+
+	if strAbspath == "" {
 		home := homedir.HomeDir()
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	} else {
@@ -132,13 +139,20 @@ func Get_Clientset_In_Cluster() *k8s.Clientset {
 	return clientset
 }
 
-func Get_Clientset_OutOf_Cluster() *k8s.Clientset {
-
+func Get_Clientset_OutOf_Cluster(strAbspath string, strMasterEnv string) *k8s.Clientset {
 	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
+
+	if strMasterEnv == "" {
+		os.Setenv("KUBERNETES_MASTER", "")
+	} else {
+		os.Setenv("KUBERNETES_MASTER", strMasterEnv)
+	}
+
+	if strAbspath == "" {
+		home := homedir.HomeDir()
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+		kubeconfig = flag.String("kubeconfig", strAbspath, "absolute path to the kubeconfig file")
 	}
 	flag.Parse()
 

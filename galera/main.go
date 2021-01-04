@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
 
 	util "github.com/kimnamkuk/Golang/util"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func main() {
@@ -14,7 +16,18 @@ func main() {
 
 	os.Setenv("KUBERNETES_MASTER", "172.17.16.160")
 
-	appsv1Cient := util.Get_Appsv1_Outof_Cluster("C:\\Users\\knk10\\.kube\\spk_config")
+	appsv1Client := util.Get_Appsv1_Outof_Cluster("C:\\Users\\knk10\\.kube\\spk_config","172.17.16.160")
+	stsClient := appsv1Client.StatefulSets(strNamespace)
+	stss, err := stsClient.List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
+	}
+	for _, sts := range stss.Items {
+		fmt.Println("Sts's name is ", sts.Name)
+		fmt.Println("Sts's status is", sts.Status.ReadyReplicas)
+		fmt.Println("Sts's status is", sts.Status.Replicas)
+		fmt.Println("Sts's status is", sts.Spec.ServiceName)
+	}
 	/*
 		var kubeconfig *string
 		kubeconfig = flag.String("kubeconifg", filepath.Join("C:\\Users\\knk10\\.kube", "spk_config"), "(optional) absolute path to the kubeconfig file!")
@@ -86,5 +99,5 @@ func init_pod() {
 }
 
 func check_mode() {
-	clientset := util.K8sInCluster()
+	//clientset := util.K8sInCluster()
 }

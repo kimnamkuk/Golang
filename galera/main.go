@@ -11,13 +11,13 @@ import (
 )
 
 func main() {
-	strPath := util.Pwd()
-	strNamespace := string(util.Cat(strPath + "\\namespace"))
+	//strPath := util.Pwd()
+	//strNamespace := string(util.Cat(strPath + "\\namespace"))
 
-	os.Setenv("KUBERNETES_MASTER", "172.17.16.160")
+	//os.Setenv("KUBERNETES_MASTER", "172.17.16.160")
 
-	appsv1Client := util.Get_Appsv1_Outof_Cluster("C:\\Users\\knk10\\.kube\\spk_config","172.17.16.160")
-	stsClient := appsv1Client.StatefulSets(strNamespace)
+	appsv1Client := util.Get_Appsv1_Outof_Cluster("C:\\Users\\knk10\\.kube\\spk_config", "172.17.16.160")
+	stsClient := appsv1Client.StatefulSets("dafault")
 	stss, err := stsClient.List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		panic(err.Error())

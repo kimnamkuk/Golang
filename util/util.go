@@ -93,13 +93,14 @@ func Get_Appsv1_In_Cluster() *appsv1.AppsV1Client {
 
 	return appsv1Client
 }
-
-func Get_Appsv1_Outof_Cluster() *appsv1.AppsV1Client {
+//You must set null of parameter, if you want to use 
+func Get_Appsv1_Outof_Cluster(strAbspath string) *appsv1.AppsV1Client {
 	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
+	if strAbspath != "" {
+		home := homedir.HomeDir()
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+		kubeconfig = flag.String("kubeconfig", strAbspath, "absolute path to the kubeconfig file")
 	}
 	flag.Parse()
 

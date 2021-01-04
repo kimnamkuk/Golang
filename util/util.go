@@ -80,22 +80,8 @@ func Set_chown2(strDirpath, strUid, strGid string) {
 	Set_chown(strDirpath, uid, gid)
 }
 
-func Get_Appsv1_In_Cluster() *appsv1.AppsV1Client {
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		panic(err.Error())
-	}
-
-	appsv1Client, err := appsv1.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	return appsv1Client
-}
-
-//You must set null of parameter, if you want to use
-func Get_Appsv1_Outof_Cluster(strAbspath string, strMasterEnv string) *appsv1.AppsV1Client {
+//You must set null of strAbspath, if you want to use $home/.kube/config
+func GetConfigOutofCluster(strAbspath string, strMasterEnv string) *rest.Config {
 	var kubeconfig *string
 	if strMasterEnv != "" {
 		os.Setenv("KUBERNETES_MASTER", strMasterEnv)
@@ -114,6 +100,19 @@ func Get_Appsv1_Outof_Cluster(strAbspath string, strMasterEnv string) *appsv1.Ap
 		panic(err.Error())
 	}
 
+	return config
+}
+
+func GetConfigInCluster() *rest.Config {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		panic(err.Error())
+	}
+	return config
+}
+
+func Get_Appsv1_Outof_Cluster(config *rest.Config) *appsv1.AppsV1Client {
+
 	appsv1Client, err := appsv1.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
@@ -122,12 +121,17 @@ func Get_Appsv1_Outof_Cluster(strAbspath string, strMasterEnv string) *appsv1.Ap
 	return appsv1Client
 }
 
-func Get_Clientset_In_Cluster() *k8s.Clientset {
+func Get_Appsv1_In_Cluster(config *rest.Config) *appsv1.AppsV1Client {
 
-	config, err := rest.InClusterConfig()
+	appsv1Client, err := appsv1.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
 	}
+
+	return appsv1Client
+}
+
+func GetClientsetInCluster(config *rest.Config) *k8s.Clientset {
 
 	clientset, err := k8s.NewForConfig(config)
 	if err != nil {
@@ -137,27 +141,7 @@ func Get_Clientset_In_Cluster() *k8s.Clientset {
 	return clientset
 }
 
-func Get_Clientset_OutOf_Cluster(strAbspath string, strMasterEnv string) *k8s.Clientset {
-	var kubeconfig *string
-
-	if strMasterEnv == "" {
-		os.Setenv("KUBERNETES_MASTER", "")
-	} else {
-		os.Setenv("KUBERNETES_MASTER", strMasterEnv)
-	}
-
-	if strAbspath == "" {
-		home := homedir.HomeDir()
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", strAbspath, "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err.Error())
-	}
+func GetClientsetOutOfCluster(config *rest.Config) *k8s.Clientset {
 
 	clientset, err := k8s.NewForConfig(config)
 	if err != nil {

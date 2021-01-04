@@ -17,7 +17,7 @@ import (
 )
 
 // Get Workdir of current
-func pwd() string {
+func Pwd() string {
 
 	dir, err := os.Getwd()
 	if err != nil {
@@ -26,7 +26,7 @@ func pwd() string {
 
 	return dir
 }
-func cat(strFile string) []byte {
+func Cat(strFile string) []byte {
 	var output []byte
 	var err error
 	file, err := os.Open(strFile)
@@ -81,7 +81,7 @@ func K8sOutOfCluster() *k8s.Clientset {
 	return clientset
 }
 
-func set_chown(strDirpath string, nUid, nGid int) {
+func Set_chown(strDirpath string, nUid, nGid int) {
 
 	_, err := os.Stat(strDirpath)
 	if os.IsNotExist(err) {
@@ -96,7 +96,7 @@ func set_chown(strDirpath string, nUid, nGid int) {
 	}
 }
 
-func set_chown2(strDirpath, strUid, strGid string) {
+func Set_chown2(strDirpath, strUid, strGid string) {
 
 	curuser, err := user.Lookup(strUid)
 	if err != nil {

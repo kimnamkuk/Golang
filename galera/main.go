@@ -16,6 +16,9 @@ import (
 )
 
 func main() {
+	strPath := util.pwd()
+	fmt.Println(strPath)
+
 	os.Setenv("KUBERNETES_MASTER", "172.17.16.160")
 	var kubeconfig *string
 	kubeconfig = flag.String("kubeconifg", filepath.Join("C:\\Users\\knk10\\.kube", "spk_config"), "(optional) absolute path to the kubeconfig file!")

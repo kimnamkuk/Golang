@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -78,6 +79,36 @@ func Set_chown2(strDirpath, strUid, strGid string) {
 	gid, _ := strconv.Atoi(curgroup.Gid)
 
 	Set_chown(strDirpath, uid, gid)
+}
+
+func FindFile(strTargetDir string, lstPattern []string) {
+
+	for _, v := range lstPattern {
+		matches, err := filepath.Glob(strTargetDir + v)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		if len(matches) != 0 {
+			log.Println("Found : ", matches)
+		}
+	}
+}
+
+func IsFindFile(strTargetDir string, strFileName string) bool {
+	matches, err := filepath.Glob(strTargetDir + strFileName)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	if len(matches) != 0 {
+		log.Println("Found : ", matches)
+		return true
+	}
+
+	return false
 }
 
 //You must set null of strAbspath, if you want to use $home/.kube/config
